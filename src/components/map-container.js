@@ -25,7 +25,6 @@ import MapboxGLMap from 'react-map-gl';
 import DeckGL from 'deck.gl';
 import GL from 'luma.gl/constants';
 import {registerShaderModules, setParameters} from 'luma.gl';
-import pickingModule from 'shaderlib/picking-module';
 import brushingModule from 'shaderlib/brushing-module';
 
 // components
@@ -126,7 +125,7 @@ export default function MapContainerFactory(MapPopover, MapControl) {
 
     _onWebGLInitialized = gl => {
       registerShaderModules(
-        [pickingModule, brushingModule], {
+        [brushingModule], {
           ignoreMultipleRegistrations: true
       });
 
