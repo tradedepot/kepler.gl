@@ -124,10 +124,7 @@ export default function MapContainerFactory(MapPopover, MapControl) {
     };
 
     _onWebGLInitialized = gl => {
-      registerShaderModules(
-        [brushingModule], {
-          ignoreMultipleRegistrations: true
-      });
+      registerShaderModules([brushingModule]);
 
       // allow Uint32 indices in building layer
       // gl.getExtension('OES_element_index_uint');
