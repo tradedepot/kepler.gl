@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -132,6 +132,7 @@ export default function SidePanelFactory(
       const {
         appName,
         version,
+        homeUrl,
         datasets,
         filters,
         layers,
@@ -144,14 +145,14 @@ export default function SidePanelFactory(
         mapStyleActions,
         uiStateActions
       } = this.props;
-      const {activeSidePanel} = uiState;
+      const { activeSidePanel } = uiState;
       const isOpen = Boolean(activeSidePanel);
 
       const layerManagerActions = {
         addLayer: visStateActions.addLayer,
         layerConfigChange: visStateActions.layerConfigChange,
         layerVisualChannelConfigChange:
-        visStateActions.layerVisualChannelConfigChange,
+          visStateActions.layerVisualChannelConfigChange,
         layerTypeChange: visStateActions.layerTypeChange,
         layerVisConfigChange: visStateActions.layerVisConfigChange,
         updateLayerBlending: visStateActions.updateLayerBlending,
@@ -195,6 +196,7 @@ export default function SidePanelFactory(
             <PanelHeader
               appName={appName}
               version={version}
+              homeUrl={homeUrl}
               onExportImage={this._onExportImage}
               onExportData={this._onExportData}
               visibleDropdown={uiState.visibleDropdown}
@@ -211,7 +213,7 @@ export default function SidePanelFactory(
             <SidePanelContent className="side-panel__content">
               <div>
                 <PanelTitle className="side-panel__content__title">
-                  {(PANELS.find(({id}) => id === activeSidePanel) || {}).label}
+                  {(PANELS.find(({ id }) => id === activeSidePanel) || {}).label}
                 </PanelTitle>
                 {activeSidePanel === 'layer' && (
                   <LayerManager

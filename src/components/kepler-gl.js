@@ -18,20 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, {Component} from 'react';
-import {console as Console} from 'global/window';
-import {bindActionCreators} from 'redux';
-import {json as requestJson} from 'd3-request';
-import styled, {ThemeProvider}  from 'styled-components';
-import {connect as keplerGlConnect} from '../connect/keplergl-connect';
+import React, { Component } from 'react';
+import { console as Console } from 'global/window';
+import { bindActionCreators } from 'redux';
+import { json as requestJson } from 'd3-request';
+import styled, { ThemeProvider } from 'styled-components';
+import { connect as keplerGlConnect } from '../connect/keplergl-connect';
 
 import * as VisStateActions from 'actions/vis-state-actions';
 import * as MapStateActions from 'actions/map-state-actions';
 import * as MapStyleActions from 'actions/map-style-actions';
 import * as UIStateActions from 'actions/ui-state-actions';
 
-import {EXPORT_IMAGE_ID, DIMENSIONS,
-  KEPLER_GL_NAME, KEPLER_GL_VERSION} from 'constants/default-settings';
+import {
+  EXPORT_IMAGE_ID,
+  DIMENSIONS,
+  KEPLER_GL_NAME,
+  KEPLER_GL_VERSION,
+  KEPLER_GL_WEBSITE,
+} from 'constants/default-settings';
 
 import SidePanelFactory from './side-panel';
 import MapContainerFactory from './map-container';
@@ -39,9 +44,9 @@ import BottomWidgetFactory from './bottom-widget';
 import ModalContainerFactory from './modal-container';
 import PlotContainerFactory from './plot-container';
 
-import {generateHashId} from 'utils/utils';
+import { generateHashId } from 'utils/utils';
 
-import {theme} from 'styles/base';
+import { theme } from 'styles/base';
 
 const GlobalStyle = styled.div`
   font-family: ff-clan-web-pro, 'Helvetica Neue', Helvetica, sans-serif;
@@ -93,7 +98,8 @@ function KeplerGlFactory(
       width: 800,
       height: 800,
       appName: KEPLER_GL_NAME,
-      version: KEPLER_GL_VERSION
+      version: KEPLER_GL_VERSION,
+      homeUrl: KEPLER_GL_WEBSITE,
     };
 
     componentWillMount() {
@@ -114,7 +120,7 @@ function KeplerGlFactory(
       }
     }
 
-    _handleResize({width, height}) {
+    _handleResize({ width, height }) {
       if (!Number.isFinite(width) || !Number.isFinite(height)) {
         Console.warn('width and height is required');
         return;
@@ -147,13 +153,13 @@ function KeplerGlFactory(
     };
 
     _requestMapStyle = (mapStyle) => {
-      const {url, id} = mapStyle;
+      const { url, id } = mapStyle;
       requestJson(url, (error, result) => {
         if (error) {
           Console.warn(`Error loading map style ${mapStyle.url}`);
         } else {
           this.props.mapStyleActions.loadMapStyles({
-            [id]: {...mapStyle, style: result}
+            [id]: { ...mapStyle, style: result }
           });
         }
       });
@@ -165,6 +171,7 @@ function KeplerGlFactory(
         id,
         appName,
         version,
+        homeUrl,
         onSaveMap,
         width,
         height,
@@ -200,6 +207,7 @@ function KeplerGlFactory(
       const sideFields = {
         appName,
         version,
+        homeUrl,
         datasets,
         filters,
         layers,
@@ -240,21 +248,21 @@ function KeplerGlFactory(
 
       const mapContainers = !isSplit
         ? [
-            <MapContainer
-              key={0}
-              index={0}
-              {...mapFields}
-              mapLayers={isSplit ? splitMaps[0].layers : null}
-            />
-          ]
+          <MapContainer
+            key={0}
+            index={0}
+            {...mapFields}
+            mapLayers={isSplit ? splitMaps[0].layers : null}
+          />
+        ]
         : splitMaps.map((settings, index) => (
-            <MapContainer
-              key={index}
-              index={index}
-              {...mapFields}
-              mapLayers={splitMaps[index].layers}
-            />
-          ));
+          <MapContainer
+            key={index}
+            index={index}
+            {...mapFields}
+            mapLayers={splitMaps[index].layers}
+          />
+        ));
 
       const isExporting = uiState.currentModal === EXPORT_IMAGE_ID;
 
@@ -273,7 +281,7 @@ function KeplerGlFactory(
             }}
           >
             {!uiState.readOnly && <SidePanel {...sideFields} />}
-            <div className="maps" style={{display: 'flex'}}>
+            <div className="maps" style={{ display: 'flex' }}>
               {mapContainers}
             </div>
             {isExporting &&
@@ -365,7 +373,7 @@ function mergeActions(actions, userActions) {
     }
   }
 
-  return {...actions, ...overrides};
+  return { ...actions, ...overrides };
 }
 
 export default KeplerGlFactory;
